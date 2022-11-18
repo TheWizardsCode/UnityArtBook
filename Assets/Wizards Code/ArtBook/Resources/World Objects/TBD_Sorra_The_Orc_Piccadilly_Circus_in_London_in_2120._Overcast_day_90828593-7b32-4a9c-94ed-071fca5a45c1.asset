@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5161ba7c9cebaa642a5efa775d16bb9e, type: 3}
+  m_Name: TBD_Sorra_The_Orc_Piccadilly_Circus_in_London_in_2120._Overcast_day_90828593-7b32-4a9c-94ed-071fca5a45c1
+  m_EditorClassIdentifier: 
+  m_objectClass: 0
+  m_ShortName: TBD
+  m_LongName: TBD
+  m_Race: 999
+  m_ConceptArt:
+  - {fileID: 2800000, guid: 1ed9e78a3a5d86c4ebd6dd645cc5bc62, type: 3}
