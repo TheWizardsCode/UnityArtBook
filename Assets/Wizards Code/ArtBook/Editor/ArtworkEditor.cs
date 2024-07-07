@@ -8,18 +8,25 @@ namespace WizardsCode
     [CustomEditor(typeof(Artwork))]
     public class ArtworkEditor : Editor
     {
+        string prompt = string.Empty;
+        
         public override void OnInspectorGUI()
         {
             Artwork artwork = (Artwork)target;
 
-            string prompt = artwork.Prompt;
+            if (string.IsNullOrEmpty(prompt)) {
+                prompt = artwork.Prompt;
+            }
+            
             EditorGUILayout.LabelField("", prompt, Styles.Prompt);
             if (GUILayout.Button("Copy"))
             {
                 GUIUtility.systemCopyBuffer = prompt;
             }
 
-            EditorGUILayout.Space();
+            EditorGUILayout.Space(30);
+
+            EditorGUI.BeginChangeCheck();
 
             artwork.SpecifySeed = EditorGUILayout.ToggleLeft("Specify Seed", artwork.SpecifySeed);
             if (artwork.SpecifySeed)
@@ -54,6 +61,18 @@ namespace WizardsCode
             EditorGUILayout.EndHorizontal();
 
             EditorGUILayout.BeginHorizontal();
+            artwork.ByArtists = EditorGUILayout.TextField("By Artists", artwork.ByArtists);
+            EditorGUILayout.EndHorizontal();
+
+            EditorGUILayout.BeginHorizontal();
+            artwork.AdditionalParameters = EditorGUILayout.TextField("Additional Parameters", artwork.AdditionalParameters);
+            EditorGUILayout.EndHorizontal();
+
+            EditorGUILayout.BeginHorizontal();
+            artwork.No = EditorGUILayout.TextField("No", artwork.No);
+            EditorGUILayout.EndHorizontal();
+
+            EditorGUILayout.BeginHorizontal();
             artwork.ShotFraming = (Artwork.Framing)EditorGUILayout.EnumPopup("Shot Framing", artwork.ShotFraming);
             EditorGUILayout.EndHorizontal();
 
@@ -61,7 +80,16 @@ namespace WizardsCode
             artwork.Form = (Artwork.Artform)EditorGUILayout.EnumPopup("Art Form", artwork.Form);
             EditorGUILayout.EndHorizontal();
 
-            EditorGUILayout.Space();
+            EditorGUILayout.Space(); 
+            
+            if (EditorGUI.EndChangeCheck())
+            {
+                prompt = artwork.Prompt;
+
+                EditorUtility.SetDirty(artwork);
+                AssetDatabase.SaveAssets();
+                AssetDatabase.Refresh();
+            }
         }
     }
 }

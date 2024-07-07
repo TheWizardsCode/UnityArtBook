@@ -3,13 +3,14 @@ using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
-using static WizardsCode.WorldObject;
+using static WizardsCode.ArtworkObjects;
 
 namespace WizardsCode
 {
     public class BookController : MonoBehaviour
     {
-        private const string ResourcesPath = "World Objects";
+        public const string ART_RESOURCES_PATH = "ArtObjects";
+
         [SerializeField, Tooltip("The book prefab we are building from.")]
         EndlessBook m_bookPrefab;
         [SerializeField, Tooltip("The base matierla to use for pages. When creating pages this material will be used, with the main material replaced with the appropriate image.")]
@@ -32,35 +33,33 @@ namespace WizardsCode
             int pageNumber = 0;
 
             // Load all WorldObjects from resources folder
-            WorldObject[] worldObjects = Resources.LoadAll<WorldObject>(ResourcesPath);
-            if (worldObjects == null)
+            ArtworkObjects[] artObjects = Resources.LoadAll<ArtworkObjects>(ART_RESOURCES_PATH);
+            if (artObjects == null)
             {
-                Debug.LogError("No WorldObjects Found.");
+                Debug.LogError("No Artwork Objects Found.");
                 return;
             }
 
-            foreach (ObjectRace race in Enum.GetValues(typeof(ObjectRace))) {
-                //TODO: Add a Race Section Header
-                foreach (ObjectClass objClass in Enum.GetValues(typeof(ObjectClass)))
+            foreach (SubjectClassification classification in Enum.GetValues(typeof(SubjectClassification)))
+            {
+                // iterate over the images creating a page in the book for each one
+                foreach (ArtworkObjects artObject in artObjects)
                 {
-                    // iterate over the images creating a page in the book for each one
-                    foreach (WorldObject worldObject in worldObjects)
-                    {
-                        if (worldObject.Race != race || worldObject.Class != objClass) continue; 
+                    if (artObject.Classification != classification) continue; 
                         
-                        foreach (Texture2D image in worldObject.ConceptArt)
-                        {
-                            if (image == null) continue;
+                    foreach (Texture2D image in artObject.ConceptArt)
+                    {
+                        if (image == null) continue;
 
-                            pageNumber++;
-                            Material material = new Material(m_basePageMaterial);
-                            material.mainTexture = image;
+                        pageNumber++;
+                        Material material = new Material(m_basePageMaterial);
+                        material.mainTexture = image;
 
-                            PageData page = book.AddPageData();
-                            page.material = material;
+                        PageData page = book.AddPageData();
+                        page.material = material;
+                        page.
 
-                            book.SetPageNumber(pageNumber);
-                        }
+                        book.SetPageNumber(pageNumber);
                     }
                 }
             }
@@ -134,66 +133,6 @@ namespace WizardsCode
             }
             
             timeOfNextTurn = Time.timeSinceLevelLoad + m_timeBetweenPageTurns;
-        }
-
-        [MenuItem("Tools/Wizards Code/TCG/Find New World Objects")]
-        public static void FindNewWorldObjects()
-        {
-            List<WorldObject> worldObjects = new List<WorldObject>(Resources.LoadAll<WorldObject>(ResourcesPath));
-            
-            Texture2D[] images = Resources.LoadAll<Texture2D>(ResourcesPath);
-            if (images == null)
-            {
-                EditorUtility.DisplayDialog("No New Images", "No unassigned images found", "OK");
-                return;
-            }
-
-            List<Texture2D> newImages = new List<Texture2D>();
-            foreach (Texture2D candidate in images)
-            {
-                bool isNew = true;
-                foreach (WorldObject obj in worldObjects)
-                {
-                    foreach (Texture2D image in obj.ConceptArt)
-                    {
-                        if (image == candidate)
-                        {
-                            isNew = false;
-                            continue;
-                        }
-                    }
-
-                    if (!isNew)
-                    {
-                        continue;
-                    }
-                }
-
-                if (isNew)
-                {
-                    newImages.Add(candidate);
-                }
-            }
-
-            if (newImages.Count > 0)
-            {
-                string continuation = newImages.Count > 1 ? "s were" : " was";
-                EditorUtility.DisplayDialog("New Images Found", $"{newImages.Count} new image{continuation} found. Hit OK to create a WorldObject record for them.", "OK");
-
-                for (int i = 0; i < newImages.Count; i++)
-                {
-                    WorldObject obj = ScriptableObject.CreateInstance<WorldObject>();
-                    obj.ConceptArt = new Texture2D[] { newImages[i] };
-                    EditorUtility.DisplayProgressBar("New Images Found", $"{newImages.Count} new image{continuation} found. Creating WorldObject {i} of {newImages.Count}.", i / (float)newImages.Count);
-
-                    AssetDatabase.CreateAsset(obj, $"Assets/Wizards Code/Resources/{ResourcesPath}/TBD_{newImages[i].name}.asset");
-                }
-                EditorUtility.ClearProgressBar();
-                return;
-            } else
-            {
-                EditorUtility.DisplayDialog("No New Images", "No unassigned images found", "OK");
-            }
         }
     }
 }

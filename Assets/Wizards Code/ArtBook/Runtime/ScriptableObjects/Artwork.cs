@@ -9,14 +9,13 @@ namespace WizardsCode
     [CreateAssetMenu(fileName = "New Artwork", menuName = "Wizards Code/Artwork")]
     public class Artwork : ScriptableObject
     {
-        public enum Artform { Undefined, ConceptArt, CharacterConceptArt, TradingCard }
+        public enum Artform { Undefined, ConceptArt, CharacterConceptArt, Sketch, TradingCard }
         public enum Framing { Undefined = 0, SideView = 10, TopView = 20, AerialView = 30,  
             CloseUpView = 100, ExtremeCloseup = 110, LongShot = 120, ExtremeLongShot = 130,
             MassiveScale = 300, Landscape = 310, Panoramic = 320, Bokeh = 330, Fisheye = 340,
             DutchAngle = 400, LowAngle  = 410, HighAngle = 420, WideAngle = 430}
 
         [SerializeField, Tooltip("Image prompts for this artwork.")]
-        [FormerlySerializedAs("m_ImagePrompt")]
         public string ImagePrompt;
         [SerializeField, Tooltip("The location for the artwork. This will be used to creat the prompt.")]
         string m_Location;
@@ -26,24 +25,49 @@ namespace WizardsCode
         string m_Action;
         [SerializeField, Tooltip("A description of the lighting to apply to the scene.")]
         private string m_Lighting; // accent lighting, backlight, blacklight, blinding light, candlelight, concert lighting, crepuscular rays, direct sunlight, dusk, Edison bulb, electric arc, fire, fluorescent, glowing, glowing radioactively, glow-stick, lava glow, moonlight, natural lighting, neon lamp, nightclub lighting, nuclear waste glow, quantum dot display, spotlight, strobe, sunlight, ultraviolet, dramatic lighting, dark lighting, soft lighting
+        [SerializeField, Tooltip("Any additional artists that you want to be included in this prompt. Some ArtForms will define artists automatically.")]
+        public string ByArtists;
         [SerializeField, Tooltip("The camera angle to use for this artwork.")]
-        [FormerlySerializedAs("m_ShotFraming")]
         public Framing ShotFraming;
         [SerializeField, Tooltip("The form of the artwork. This will define things like the artist style, the size of the artwork, the number of colours, etc.")]
-        [FormerlySerializedAs("m_Form")]
         public Artform Form;
+        [SerializeField, Tooltip("A comma separated list of things that should not be in the scene.")]
+        public string No;
         [SerializeField, Tooltip("Use a specified seed (set to tru) or a random one (set to false).")]
         public bool SpecifySeed = true;
         [SerializeField, Tooltip("The seed used to generate this image. This will initially be randomly generated but feel free to override it.")]
         int m_Seed;
         [SerializeField, Tooltip("Additional parameters to be added at the end of the prompt. These will appear before any that are automatically provided by the generator and thus will take precedence.")]
-        string m_AdditionalParameters;
+        public string AdditionalParameters;
+        
         public string Prompt
         {
             get {
                 // Anatomy of a prompt [Image Prompts] [Content type] [Description] [Style] [Composition] [Parameters]
                 // from https://medium.com/mlearning-ai/the-anatomy-of-an-ai-art-prompt-dcf7d124406d
                 return $"{ImagePrompt} {ContentType} {Description} {Style} {Composition} {PromptParameters}"; 
+            }
+        }
+        
+        public string NoParam
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(No)) {
+                    return string.Empty;
+                }
+                StringBuilder sb = new StringBuilder();
+                string[] elements = No.Split(',');
+                foreach (string element in elements) 
+                {
+                    sb.Append(" --no ");
+                    sb.Append(element.Trim());
+                }
+                return sb.ToString();
+            }
+            set
+            {
+                No = value;
             }
         }
 
@@ -261,6 +285,8 @@ namespace WizardsCode
                         return $"A portrait photograph in front of a solid black screen.";
                     case Artform.TradingCard:
                         return $"A digital render.";
+                    case Artform.Sketch:
+                        return $"An outline sketch.";
                     default:
                         return "";
                 }
@@ -270,17 +296,37 @@ namespace WizardsCode
         public string Artists { 
             get
             {
-                string artists = "Painted by ";
+                string artists = string.Empty;
+                if (!string.IsNullOrEmpty(ByArtists))
+                {
+                    artists = ByArtists;
+                }
+                
                 switch (Form)
                 {
                     case Artform.ConceptArt:
-                        return $"{artists}";
+                        return $"By {artists}";
                     case Artform.CharacterConceptArt:
-                        return $"{artists}";
+                        return $"By {artists}";
                     case Artform.TradingCard:
-                        return $"{artists} Alvin Lee and Jasmine Becket-Griffith.";
+
+                        if (string.IsNullOrEmpty(artists))
+                        {
+                            return $"By Alvin Lee and Jasmine Becket-Griffith.";
+                        }
+                        else
+                        {
+                            return $"By {artists}, Alvin Lee and Jasmine Becket-Griffith.";
+                        }
                     default:
-                        return "";
+                        if (string.IsNullOrEmpty(artists))
+                        {
+                            return $"By {artists}.";
+                        }
+                        else
+                        {
+                            return $"By {artists}.";
+                        }
                 }
             }
         }
@@ -288,7 +334,10 @@ namespace WizardsCode
             get
             {
                 StringBuilder sb = new StringBuilder();
-                sb.Append($" {m_AdditionalParameters}");
+
+                sb.Append($" {AdditionalParameters}");
+
+                sb.Append($" {NoParam}");
 
                 if (!SpecifySeed)
                 {
