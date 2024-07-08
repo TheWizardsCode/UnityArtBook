@@ -14,9 +14,9 @@ internal static class ArtworkClassifier
     [MenuItem("Tools/Wizards Code/Art Book/Classify New Art")]
     public static void FindNewArtObjects()
     {
-        List<ArtworkObjects> artObjects = new List<ArtworkObjects>(Resources.LoadAll<ArtworkObjects>(BookController.ART_RESOURCES_PATH));
+        List<ArtworkObjects> artObjects = new List<ArtworkObjects>(Resources.LoadAll<ArtworkObjects>(EndlessBookController.ART_RESOURCES_PATH));
 
-        Texture2D[] images = Resources.LoadAll<Texture2D>(BookController.ART_RESOURCES_PATH);
+        Texture2D[] images = Resources.LoadAll<Texture2D>(EndlessBookController.ART_RESOURCES_PATH);
         if (images == null)
         {
             EditorUtility.DisplayDialog("No New Images", "No unassigned images found", "OK");
@@ -80,7 +80,7 @@ internal static class ArtworkClassifier
                     string imageNumber = newImages[i].name.Substring(indexOfImageType + 1, newImages[i].name.Length - indexOfImageType - 1).Trim();
                     obj.IDNumber = int.Parse(imageNumber);
 
-                    string folderPath = $"Wizards Code/ArtBook/Resources/{BookController.ART_RESOURCES_PATH}/{obj.ConceptGroup}/{obj.Classification}/";
+                    string folderPath = $"Wizards Code/ArtBook/Resources/{EndlessBookController.ART_RESOURCES_PATH}/{obj.ConceptGroup}/{obj.Classification}/";
                     string assetName = $"{obj.SubjectName} - {obj.IDNumber}.asset";
 
                     string currentPath = "Assets";

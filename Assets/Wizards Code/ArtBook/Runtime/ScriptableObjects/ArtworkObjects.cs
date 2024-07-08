@@ -53,7 +53,6 @@ namespace WizardsCode
             internal  set { m_Art = value; }
         }
 
-        [Obsolete("No longer storing concept art in the object. We instead store the Artwork definition.")]
         public Texture2D[] ConceptArt
         {
             get { return m_ConceptArt; }
