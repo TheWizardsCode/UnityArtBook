@@ -134,12 +134,12 @@ GameObject:
   - component: {fileID: 928724961}
   - component: {fileID: 928724960}
   m_Layer: 0
-  m_Name: BookController
+  m_Name: Endless Book Controller
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &928724960
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -256,8 +256,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1044536894}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0.415, z: 0}
+  m_LocalRotation: {x: -0.52592915, y: 0.003058987, z: -0.0018920724, w: -0.8505208}
+  m_LocalPosition: {x: -0.28505558, y: 0.5992609, z: 1.7305292}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -323,6 +323,55 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1288237292}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1424208327
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1424208329}
+  - component: {fileID: 1424208328}
+  m_Layer: 0
+  m_Name: Book Effect Controller
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1424208328
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1424208327}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8cc6ba0b43364fe428d200d5563ea9bc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_bookPrefab: {fileID: 7909030658918853034, guid: cf474efcbf921f64186d7ac7f77f4d68, type: 3}
+  m_TitlePage: {fileID: 2800000, guid: 5be85c079f9efa64fb9fce2e642aeca3, type: 3}
+  m_BlankPage: {fileID: 2800000, guid: cfa1b52cd2fd4094abeff768b40203bf, type: 3}
+  m_timeBetweenPageTurns: 5
+  m_durationOfPageTurn: 1
+--- !u!4 &1424208329
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1424208327}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
@@ -432,4 +481,5 @@ SceneRoots:
   - {fileID: 1044536897}
   - {fileID: 1959036901}
   - {fileID: 928724961}
+  - {fileID: 1424208329}
   - {fileID: 1288237295}
