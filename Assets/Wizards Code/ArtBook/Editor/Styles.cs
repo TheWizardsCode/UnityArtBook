@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-namespace WizardsCode
+namespace WizardsCode.ArtBook
 {
     public static class Styles
     {

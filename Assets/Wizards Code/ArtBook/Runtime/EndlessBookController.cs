@@ -1,11 +1,9 @@
 using echo17.EndlessBook;
 using System;
-using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
-using static WizardsCode.ArtworkObjects;
+using static WizardsCode.ArtBook.ArtworkObjects;
 
-namespace WizardsCode
+namespace WizardsCode.ArtBook
 {
     /// <summary>
     /// A version of the book controller that uses the EndleeBook asset. This asset has some nice animations, but

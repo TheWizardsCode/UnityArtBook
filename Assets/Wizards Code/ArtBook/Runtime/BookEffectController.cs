@@ -1,9 +1,9 @@
 using BookEffectV3;
 using System;
 using UnityEngine;
-using static WizardsCode.ArtworkObjects;
+using static WizardsCode.ArtBook.ArtworkObjects;
 
-namespace WizardsCode
+namespace WizardsCode.ArtBook
 {
     /// <summary>
     /// A version of the book controller that uses the Book Effect asset. This asset has limited animations, but
@@ -92,6 +92,7 @@ namespace WizardsCode
                 book.TurnPageBack();
             } else
             {
+                isFlippingForward = true;
                 book.CloseBook();
             }
 

@@ -1,9 +1,7 @@
 using System;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.Serialization;
 
-namespace WizardsCode
+namespace WizardsCode.ArtBook
 {
     [CreateAssetMenu(fileName = "New World Object", menuName = "Wizards Code/World Object")]
     public class ArtworkObjects : ScriptableObject
