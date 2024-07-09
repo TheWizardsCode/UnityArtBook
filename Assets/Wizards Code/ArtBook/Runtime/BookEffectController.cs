@@ -13,28 +13,45 @@ namespace WizardsCode.ArtBook
     {
         public const string ART_RESOURCES_PATH = "ArtObjects";
 
+        [Header("Book")]
         [SerializeField, Tooltip("The book prefab we are building from.")]
         BookMeshBuilder m_bookPrefab;
-
         [SerializeField, Tooltip("The texture to use for the title page.")]
         Texture2D m_TitlePage = null;
-
         [SerializeField, Tooltip("The texture to use when a blank page is required.")]
         Texture2D m_BlankPage = null;
         
         [Header("Page Turning")]
-        [SerializeField, Tooltip("The time between page turning.")]
-        float m_timeBetweenPageTurns = 5f;
-        [SerializeField, Tooltip("The time it takes to tun a page.")]
-        float m_durationOfPageTurn = 1f;
+        [SerializeField, Tooltip("The time between page turning."), Range(1, 60)]
+        public float timeBetweenPageTurns = 5f;
+        [SerializeField, Tooltip("The time it takes to tun a page."), Range(1, 10)]
+        float m_durationOfPageTurn = 2f;
+
+        [Header("User Controls")]
+        [SerializeField, Tooltip("Allow the user to control the book manually using shortcut keys.")]
+        bool m_AllowShortcutKeys = true;
 
         BookMeshBuilder book;
+        bool autoTurnPage = true;
         float timeOfNextTurn;
         Boolean flipForward = true;
 
+        public float TimeBetweenPageTurns
+        {
+            get { return timeBetweenPageTurns; }
+            set { 
+                if (timeBetweenPageTurns == value)
+                {
+                    return;
+                }
+
+                timeOfNextTurn = Mathf.Min(timeOfNextTurn, Time.timeSinceLevelLoad + value);
+                timeBetweenPageTurns = Mathf.Max(value, m_durationOfPageTurn * 2f);
+            }
+        }
+
         void Start()
         {
-            // Create a book instance
             book = Instantiate(m_bookPrefab);
             
             // Load all WorldObjects from resources folder
@@ -74,29 +91,90 @@ namespace WizardsCode.ArtBook
         bool isFlippingForward = true;
         private void Update()
         {
-            if (timeOfNextTurn > Time.timeSinceLevelLoad)
+            KeysInput();
+            AutoPageTurnUpdate();
+        }
+
+        private void KeysInput()
+        {
+            if (m_AllowShortcutKeys)
+            {
+                if (Input.GetKeyDown(KeyCode.O))
+                {
+                    OpenBook();
+                }
+                if (Input.GetKeyDown(KeyCode.C))
+                {
+                    CloseBook();
+                }
+                if (Input.GetKeyDown(KeyCode.LeftArrow))
+                {
+                    TurnPageBackward();
+                }
+                if (Input.GetKeyDown(KeyCode.RightArrow))
+                {
+                    TurnPageForward();
+                }
+                if (Input.GetKeyDown(KeyCode.A))
+                {
+                    ToggleAutoPageTurn();
+                }
+            }
+        }
+
+        public void ToggleAutoPageTurn()
+        {
+            autoTurnPage = !autoTurnPage;
+        }
+
+        private void AutoPageTurnUpdate()
+        {
+            if (!autoTurnPage || timeOfNextTurn > Time.timeSinceLevelLoad)
             {
                 return;
             }
+            book.SetSpeed(m_durationOfPageTurn);
 
             if (book.IsBookOpen == false)
             {
-                book.OpenBook();
+                OpenBook();
             }
             else if (isFlippingForward && book.CanTurnPageForward)
             {
-                book.TurnPage();
-            } else if (book.CanTurnPageBackWard)
+                TurnPageForward();
+            }
+            else if (book.CanTurnPageBackWard)
             {
                 isFlippingForward = false;
-                book.TurnPageBack();
-            } else
+                TurnPageBackward();
+            }
+            else
             {
                 isFlippingForward = true;
-                book.CloseBook();
+                CloseBook();
             }
 
-            timeOfNextTurn = Time.timeSinceLevelLoad + m_timeBetweenPageTurns;
+            timeOfNextTurn = Time.timeSinceLevelLoad + TimeBetweenPageTurns;
+        }
+
+        public void OpenBook()
+        {
+            book.OpenBook();
+        }
+
+        public void CloseBook()
+        {
+            book.CloseBook();
+        }
+
+        public void TurnPageBackward()
+        {
+            book.TurnPageBack();
+        }
+
+        public void TurnPageForward()
+        {
+            book.TurnPage();
         }
     }
 }
