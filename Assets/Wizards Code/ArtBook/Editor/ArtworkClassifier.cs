@@ -60,27 +60,27 @@ namespace WizardsCode.ArtBook
 
                 for (int i = 0; i < newImages.Count; i++)
                 {
-                    int indexOfConceptFor = newImages[i].name.IndexOf("-");
-                    int indexOfObjectType = newImages[i].name.IndexOf("-", indexOfConceptFor + 1);
-                    int indexOfTitle = newImages[i].name.IndexOf("-", indexOfObjectType + 1);
-                    int indexOfImageType = newImages[i].name.IndexOf("-", indexOfTitle + 1);
-                    int indexOfImageNumber = newImages[i].name.IndexOf("-", indexOfImageType + 1);
+                    int indexEndOfConceptFor = newImages[i].name.IndexOf("-");
+                    int indexEndOfObjectType = newImages[i].name.IndexOf("-", indexEndOfConceptFor + 1);
+                    int indexEndOfTitle = newImages[i].name.IndexOf("-", indexEndOfObjectType + 1);
+                    int indexEndOfImageType = newImages[i].name.IndexOf("_", indexEndOfTitle + 1);
+                    int indexEndOfImageNumber = newImages[i].name.IndexOf("_", indexEndOfImageType + 1);
 
-                    string imageType = newImages[i].name.Substring(indexOfTitle + 1, indexOfImageType - indexOfTitle - 1).Trim();
+                    string imageType = newImages[i].name.Substring(indexEndOfTitle + 1, indexEndOfImageType - indexEndOfTitle - 1).Trim();
                     if (imageType == "Img2Img")
                     {
                         ArtworkObjects obj = ScriptableObject.CreateInstance<ArtworkObjects>();
                         obj.ConceptArt = new Texture2D[] { newImages[i] };
 
-                        obj.ConceptGroup = newImages[i].name.Substring(0, indexOfConceptFor).Trim();
+                        obj.ConceptGroup = newImages[i].name.Substring(0, indexEndOfConceptFor).Trim();
 
-                        string subjectClassification = newImages[i].name.Substring(indexOfConceptFor + 1, indexOfObjectType - indexOfConceptFor - 1).Trim();
+                        string subjectClassification = newImages[i].name.Substring(indexEndOfConceptFor + 1, indexEndOfObjectType - indexEndOfConceptFor - 1).Trim();
                         obj.Classification = Enum.Parse<ArtworkObjects.SubjectClassification>(subjectClassification);
 
 
-                        obj.SubjectName = newImages[i].name.Substring(indexOfObjectType + 1, indexOfTitle - indexOfObjectType - 1).Trim();
+                        obj.SubjectName = newImages[i].name.Substring(indexEndOfObjectType + 1, indexEndOfTitle - indexEndOfObjectType - 1).Trim();
 
-                        string imageNumber = newImages[i].name.Substring(indexOfImageType + 1, newImages[i].name.Length - indexOfImageType - 1).Trim();
+                        string imageNumber = newImages[i].name.Substring(indexEndOfImageType + 1, indexEndOfImageNumber - indexEndOfImageType - 1);
                         obj.IDNumber = int.Parse(imageNumber);
 
                         string folderPath = $"Wizards Code/ArtBook/Resources/{EndlessBookController.ART_RESOURCES_PATH}/{obj.ConceptGroup}/{obj.Classification}/";
