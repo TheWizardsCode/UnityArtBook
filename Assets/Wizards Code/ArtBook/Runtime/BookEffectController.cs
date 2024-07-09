@@ -168,21 +168,25 @@ namespace WizardsCode.ArtBook
         public void OpenBook()
         {
             book.OpenBook();
+            timeOfNextTurn = Time.timeSinceLevelLoad + TimeBetweenPageTurns;
         }
 
         public void CloseBook()
         {
             book.CloseBook();
+            timeOfNextTurn = Time.timeSinceLevelLoad + TimeBetweenPageTurns;
         }
 
         public void TurnPageBackward()
         {
             book.TurnPageBack();
+            timeOfNextTurn = Time.timeSinceLevelLoad + TimeBetweenPageTurns;
         }
 
         public void TurnPageForward()
         {
             book.TurnPage();
+            timeOfNextTurn = Time.timeSinceLevelLoad + TimeBetweenPageTurns;
         }
     }
 }
