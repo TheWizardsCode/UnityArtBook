@@ -67,24 +67,32 @@ namespace WizardsCode.ArtBook
 
             foreach (SubjectClassification classification in Enum.GetValues(typeof(SubjectClassification)))
             {
-                // iterate over the images creating a page in the book for each one
-                foreach (ArtworkObjects artObject in artObjects)
-                {
-                    if (artObject.Classification != classification) continue; 
-                        
-                    foreach (Texture2D image in artObject.ConceptArt)
-                    {
-                        if (image == null) continue;
-
-                        book.BuildDetails.Pages.Add(image);
-                    }
-                }
+                AddSection(artObjects, classification);
             }
 
             book.BuildDetails.Pages.Add(m_BlankPage);
             if (book.BuildDetails.Pages.Count % 2 != 0)
             {
                 book.BuildDetails.Pages.Add(m_BlankPage);
+            }
+        }
+
+        private void AddSection(ArtworkObjects[] artObjects, SubjectClassification classification)
+        {
+            foreach (ArtworkObjects artObject in artObjects)
+            {
+                if (artObject.Classification != classification) continue;
+                AddPages(artObject);
+            }
+        }
+
+        private void AddPages(ArtworkObjects artObject)
+        {
+            foreach (Texture2D image in artObject.ConceptArt)
+            {
+                if (image == null) continue;
+
+                book.BuildDetails.Pages.Add(image);
             }
         }
 
